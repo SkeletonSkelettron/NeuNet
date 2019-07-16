@@ -1,0 +1,12 @@
+release/main.o
+release/NeuNet.o
+release/highlighter.o
+release/treemodelcompleter.o
+release/textedit.o
+release/WorkerThread.o
+release/qrc_NeuNet.o
+release/moc_NeuNet.o
+release/moc_highlighter.o
+release/moc_treemodelcompleter.o
+release/moc_textedit.o
+release/moc_NeuralQtThread.o

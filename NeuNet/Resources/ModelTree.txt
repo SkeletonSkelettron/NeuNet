@@ -1,0 +1,54 @@
+NeuralNetwork
+
+Layer
+
+ActivationFunction
+
+LossFunction
+
+Balance
+
+LearningRateType
+
+LearningRate
+
+ThreadCount
+
+Gradient
+
+Layers
+
+ActivationFunctionType
+    None
+    Sigmoid
+    Tanh
+    ReLU
+    MReLU
+    SoftMax
+
+LayerType
+    InputLayer
+    HiddenLayer
+    OutputLayer
+
+BalanceType
+    None
+    GaussainStandartization
+    Normalization
+    NormalDistrubution
+
+LossFunctionType
+	MeanSquaredLoss
+	CrossEntropyLoss
+
+LearningRateType
+    Static
+    AdaGrad
+    AdaDelta
+    RMSProp
+    cyclic
+
+GradientType
+    Static
+    Momentum
+    Adam

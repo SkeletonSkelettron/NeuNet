@@ -1,0 +1,12 @@
+debug/main.o
+debug/NeuNet.o
+debug/highlighter.o
+debug/treemodelcompleter.o
+debug/textedit.o
+debug/WorkerThread.o
+debug/qrc_NeuNet.o
+debug/moc_NeuNet.o
+debug/moc_highlighter.o
+debug/moc_treemodelcompleter.o
+debug/moc_textedit.o
+debug/moc_NeuralQtThread.o
