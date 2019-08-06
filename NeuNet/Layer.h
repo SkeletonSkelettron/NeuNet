@@ -10,6 +10,7 @@ public:
 	std::vector<T> Outputs;
 	std::vector<T> MultipliedSums;
 	std::vector<T> Gradients;
+	std::vector<T> Parameters;
 	std::vector<T> GradientsForGrads;
 	std::vector<T> LearningRates;
 	float DropOutSize;
@@ -37,6 +38,8 @@ Layer<T>::Layer(int size, NeuralEnums::LayerType layerType, NeuralEnums::Activat
 	Inputs.resize(size);
 	Outputs.resize(size);
 	Gradients.resize(size);
+	Parameters.resize(size);
+	LearningRates.resize(size);
 	GradientsForGrads.resize(size);
 	DropOutSize = dropoutSize;
 	UsingBias = !(bias == NULL);
@@ -44,7 +47,7 @@ Layer<T>::Layer(int size, NeuralEnums::LayerType layerType, NeuralEnums::Activat
 	for (long int i = 0; i < Size; i++)
 		DropoutNeurons[i] = i < Size * DropOutSize;
 	if (UsingBias)
-		Inputs[0] = static_cast<T>(bias);
+		Inputs[0] = bias;
 }
 
 template<class T>
@@ -87,18 +90,18 @@ void Layer<T>::CalcOutputsDelegate(long int start, long  int end, bool usingDrop
 	int biasShift = UsingBias ? 1 : 0;
 	switch (ActivationFunction)
 	{
-	case NeuralEnums::ActivationFunction::GELU:
+	case NeuralEnums::ActivationFunction::GeLU:
 	{
 		if (usingDropouts)
 			for (int i = start; i < end; i++)
 			{
 				if (DropoutNeurons[i])
 					continue;
-				Outputs[i] = GELU(Inputs[i]);
+				Outputs[i] = GeLU(Inputs[i]);
 			}
 		else
 			for (int i = start; i < end; i++)
-				Outputs[i] = GELU(Inputs[i]);
+				Outputs[i] = GeLU(Inputs[i]);
 		break;
 	}
 	case NeuralEnums::ActivationFunction::Sigmoid:
@@ -113,6 +116,20 @@ void Layer<T>::CalcOutputsDelegate(long int start, long  int end, bool usingDrop
 		else
 			for (int i = start; i < end; i++)
 				Outputs[i] = Sigmoid(Inputs[i]);
+		break;
+	}
+	case NeuralEnums::ActivationFunction::Tanh:
+	{
+		if (usingDropouts)
+			for (int i = start; i < end; i++)
+			{
+				if (DropoutNeurons[i])
+					continue;
+				Outputs[i] = Tanh(Inputs[i]);
+			}
+		else
+			for (int i = start; i < end; i++)
+				Outputs[i] = Tanh(Inputs[i]);
 		break;
 	}
 	case NeuralEnums::ActivationFunction::MReLU:
@@ -143,20 +160,6 @@ void Layer<T>::CalcOutputsDelegate(long int start, long  int end, bool usingDrop
 				Outputs[i] = ReLU(Inputs[i]);
 		break;
 	}
-	case NeuralEnums::ActivationFunction::Tanh:
-	{
-		if (usingDropouts)
-			for (int i = start; i < end; i++)
-			{
-				if (DropoutNeurons[i])
-					continue;
-				Outputs[i] = Tanh(Inputs[i]);
-			}
-		else
-			for (int i = start; i < end; i++)
-				Outputs[i] = Tanh(Inputs[i]);
-		break;
-	}
 	case NeuralEnums::ActivationFunction::SoftMax:
 	{
 		if (usingDropouts)
@@ -169,6 +172,34 @@ void Layer<T>::CalcOutputsDelegate(long int start, long  int end, bool usingDrop
 		else
 			for (int i = start; i < end; i++)
 				Outputs[i] = SoftMax(Inputs[i], Inputs);
+		break;
+	}
+	case NeuralEnums::ActivationFunction::SoftPlus:
+	{
+		if (usingDropouts)
+			for (int i = start; i < end; i++)
+			{
+				if (DropoutNeurons[i])
+					continue;
+				Outputs[i] = SoftPlus(Inputs[i]);
+			}
+		else
+			for (int i = start; i < end; i++)
+				Outputs[i] = SoftPlus(Inputs[i]);
+		break;
+	}
+	case NeuralEnums::ActivationFunction::SoftSign:
+	{
+		if (usingDropouts)
+			for (int i = start; i < end; i++)
+			{
+				if (DropoutNeurons[i])
+					continue;
+				Outputs[i] = SoftSign(Inputs[i]);
+			}
+		else
+			for (int i = start; i < end; i++)
+				Outputs[i] = SoftSign(Inputs[i]);
 		break;
 	}
 	default:

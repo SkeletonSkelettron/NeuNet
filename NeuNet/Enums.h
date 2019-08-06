@@ -3,57 +3,72 @@
 namespace NeuralEnums {
 	enum class ActivationFunction
 	{
-		None = 0,
-		Sigmoid = 1,
-		Tanh = 2,
-		ReLU = 3,
-		MReLU = 4,
-		SoftMax = 5,
-		GELU = 6
+		None,
+		Sigmoid,
+		Tanh,
+		ReLU,
+		MReLU,
+		SoftMax,
+		GeLU,
+		SoftPlus,
+		SoftSign
     };
     enum class LayerType
     {
-        InputLayer = 1,
-        HiddenLayer = 2,
-        OutputLayer = 3
+        InputLayer,
+        HiddenLayer,
+        OutputLayer
     };
     enum class BalanceType
     {
-        None = 0,
+        None,
         // Mean = 0, StDev = 1
-        GaussianStandartization = 1,
+        GaussianStandartization,
         // x(i)/Range
-        Normalization = 2,
+        Normalization,
         //Probabilities are distributed normaly
-        NormalDistrubution = 3
+        NormalDistrubution
     };
     enum class LossFunctionType
     {
-        MeanSquaredLoss = 1,
-        CrossEntropyLoss = 2,
+        MeanSquaredLoss,
+        CrossEntropyLoss,
     };
 
     enum class LearningRateType
         {
-            Static = 1,
-            AdaGrad = 2,
-            AdaDelta = 3,
-            RMSProp = 4,
-			GuraMethod = 5,
-            cyclic,
+			AdaDelta,
+            AdaGrad,
+			Adam,
+			AdamMod,
+			AdaMax,
+			AMSGrad,
+			Cyclic,
+			GuraMethod,
+			Nadam,
+            RMSProp,
+			Static
         };
 
     enum class GradientType
         {
-            Static = 1,
-            Momentum = 2,
-            Adam = 3
+            Static,
+            Momentum
         };
 
 	enum class NetworkType
 	{
 		Normal,
 		AutoEncoder
+	};
+
+	enum class Precision
+	{
+		Float,
+		Double,
+		LongDouble,
+		BoostBinFloat50,
+		BoostBinFloat100
 	};
 }
 #endif // ENUMS_H

@@ -15,6 +15,10 @@
 #include "MnistData.h"
 #include <sstream>
 #include "Loss.h"
+#include <boost/multiprecision/cpp_bin_float.hpp> 
+//#include <boost/multiprecision/float128.hpp> 
+
+
 //https://devblogs.microsoft.com/cppblog/new-code-optimizer/
 NeuNet::NeuNet(QWidget *parent)
 	: QMainWindow(parent)
@@ -147,10 +151,16 @@ template<typename T> void NeuNet::initNeUnetFromJson(NeuralNetwork<T> &neuralNet
 		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::AdaDelta;
 	if (lrType == "AdaGrad")
 		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::AdaGrad;
+	if (lrType == "Adam")
+		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::Adam;
+	if (lrType == "AdamMod")
+		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::AdamMod;
 	if (lrType == "cyclic")
-		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::cyclic;
+		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::Cyclic;
 	if (lrType == "RMSProp")
 		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::RMSProp;
+	if (lrType == "GuraMethod")
+		neuralNetwork.LearningRateType = NeuralEnums::LearningRateType::GuraMethod;
 
 	if (balance == "GaussianStandartization")
 		neuralNetwork.BalanceType = NeuralEnums::BalanceType::GaussianStandartization;
@@ -166,8 +176,6 @@ template<typename T> void NeuNet::initNeUnetFromJson(NeuralNetwork<T> &neuralNet
 	if (lossFunction == "MeanSquaredLoss")
 		neuralNetwork.LossFunctionType = NeuralEnums::LossFunctionType::MeanSquaredLoss;
 
-	if (gradient == "Adam")
-		neuralNetwork.GradientType = NeuralEnums::GradientType::Adam;
 	if (gradient == "Momentum")
 		neuralNetwork.GradientType = NeuralEnums::GradientType::Momentum;
 	if (gradient == "Static")
@@ -199,8 +207,12 @@ template<typename T> void NeuNet::initNeUnetFromJson(NeuralNetwork<T> &neuralNet
 			ActivationFunctionType = NeuralEnums::ActivationFunction::SoftMax;
 		if (ActivationFunction == "Tanh")
 			ActivationFunctionType = NeuralEnums::ActivationFunction::Tanh;
-		if (ActivationFunction == "GELU")
-			ActivationFunctionType = NeuralEnums::ActivationFunction::GELU;
+		if (ActivationFunction == "GeLU")
+			ActivationFunctionType = NeuralEnums::ActivationFunction::GeLU;
+		if (ActivationFunction == "SoftPlus")
+			ActivationFunctionType = NeuralEnums::ActivationFunction::SoftPlus;
+		if (ActivationFunction == "SoftSign")
+			ActivationFunctionType = NeuralEnums::ActivationFunction::SoftSign;
 
 		if (LayerType == "HiddenLayer")
 			layerType = NeuralEnums::LayerType::HiddenLayer;
@@ -264,6 +276,8 @@ void NeuNet::on_pushButton_clicked()
 	NeuralQtThread *nthread = new NeuralQtThread(this);
 	nthread->setLambda([this]
 	{
+		boost::multiprecision::cpp_bin_float_100 b = 2;
+
 		NeuralNetwork<long double> neuralNetwork;
 
 		std::vector<MnistData<long double>> trainingSet;
@@ -303,7 +317,12 @@ void NeuNet::on_pushButton_clicked()
 
 					auto loss = neuralNetwork.PropageteForwardThreaded(neuralNetwork.Type == NeuralEnums::NetworkType::Normal ? trainingSet[i].labels : trainingSet[i].set, true);
 					neuralNetwork.PropagateBackThreaded(neuralNetwork.Type == NeuralEnums::NetworkType::Normal ? trainingSet[i].labels : trainingSet[i].set);
-
+					if (neuralNetwork.LearningRateType == NeuralEnums::LearningRateType::Adam)
+					{
+						neuralNetwork.iterations++;
+						neuralNetwork.beta1Pow = pow(0.9, neuralNetwork.iterations);
+						neuralNetwork.beta2Pow = pow(0.999, neuralNetwork.iterations);
+					}
 
 					//neuralNetwork.LearningRate -= neuralNetwork.LearningRate / (long double)TotalEpochs;
 					//if (g == 20)
@@ -321,7 +340,7 @@ void NeuNet::on_pushButton_clicked()
 					//neuralNetwork.LearningRate -= (neuralNetwork.LearningRate - static_cast<long double>(0.5)) / static_cast<long double>(total * globalEpochs);
 					losses.push_back(loss);
 					//neuralNetwork.LearningRate -= (neuralNetwork.LearningRate - 0.05L) / (long double)(total * globalEpochs);
-					if (i % 1000 == 0)
+					if (i % 1000 == 0 && i != 0)
 					{
 						totalcounter += 1000;
 						ui.pushButton->setText(QString::fromStdString(std::to_string(totalcounter) + "/" + std::to_string(total * globalEpochs)));
@@ -351,7 +370,7 @@ void NeuNet::on_pushButton_clicked()
 					}
 					long double result = (long double)counter / (long double)digitCounter;
 					auto testComplete = "training-set result: " + std::to_string(result);
-					
+
 					//ui.textEdit->append(QString::fromStdString(loopComplete + testComplete /* + "...testing done in " + std::to_string(float(endInside - beginInside) / CLOCKS_PER_SEC) + " seconds")*/));
 
 					counter = 0;
@@ -373,31 +392,31 @@ void NeuNet::on_pushButton_clicked()
 					//endInside = clock();
 					auto loopComplete = std::to_string(g + 1) + " of " + std::to_string(globalEpochs) + " done in " + std::to_string(float(endInside - beginInside) / CLOCKS_PER_SEC) + " seconds. ";
 					ui.textEdit->append(QString::fromStdString(loopComplete + testComplete + testComplete2 /* + "...testing done in " + std::to_string(float(endInside - beginInside) / CLOCKS_PER_SEC) + " seconds")*/));
-					
+
 
 				}
 				losses.clear();
-				if (neuralNetwork.Type == NeuralEnums::NetworkType::AutoEncoder)
-				{
-					for (long int i = 0; i < testTotal; i++)
-					{
+				//if (neuralNetwork.Type == NeuralEnums::NetworkType::AutoEncoder)
+				//{
+				//	for (long int i = 0; i < testTotal; i++)
+				//	{
 
-						int biasShift = neuralNetwork.Layers[0].UsingBias ? 1 : 0;
-						for (unsigned long int l = 0; l < testSet[i].set.size(); l++)
-							neuralNetwork.Layers[0].Inputs[l + biasShift] = testSet[i].set[l];
+				//		int biasShift = neuralNetwork.Layers[0].UsingBias ? 1 : 0;
+				//		for (unsigned long int l = 0; l < testSet[i].set.size(); l++)
+				//			neuralNetwork.Layers[0].Inputs[l + biasShift] = testSet[i].set[l];
 
-						auto loss = neuralNetwork.PropageteForwardThreaded(testSet[i].set, false);
-						losses.push_back(loss);
-					}
-					auto result = 0.0L;
-					for (unsigned long int v = 0; v < losses.size(); v++)
-					{
-						result += losses[v];
-					}
-					auto testComplete = "test-set average loss: " + std::to_string(result / losses.size());
-					endInside = clock();
-					//ui.textEdit->append(QString::fromStdString(loopComplete + testComplete /* + "...testing done in " + std::to_string(float(endInside - beginInside) / CLOCKS_PER_SEC) + " seconds")*/));
-				}
+				//		auto loss = neuralNetwork.PropageteForwardThreaded(testSet[i].set, false);
+				//		losses.push_back(loss);
+				//	}
+				//	auto result = 0.0;
+				//	for (unsigned long int v = 0; v < losses.size(); v++)
+				//	{
+				//		result += losses[v];
+				//	}
+				//	auto testComplete = "test-set average loss: " + std::to_string(result / losses.size());
+				//	endInside = clock();
+				//	//ui.textEdit->append(QString::fromStdString(loopComplete + testComplete /* + "...testing done in " + std::to_string(float(endInside - beginInside) / CLOCKS_PER_SEC) + " seconds")*/));
+				//}
 			}
 			catch (exception e)
 			{

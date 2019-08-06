@@ -21,10 +21,10 @@ template <typename T> void ReadMNISTMod(std::vector<std::vector<T>> &images, std
 
 	unsigned int num, magic, rows, cols;
 	ifstream icin;
-	icin.open(train ? "../../NeuNet/MNIST/train-images.idx3-ubyte"
-		: "../../NeuNet/MNIST/t10k-images.idx3-ubyte", ios::binary);/*
+	//icin.open(train ? "../../NeuNet/MNIST/train-images.idx3-ubyte"
+	//	: "../../NeuNet/MNIST/t10k-images.idx3-ubyte", ios::binary);
 	icin.open(train ? "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/train-images.idx3-ubyte"
-		: "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/t10k-images.idx3-ubyte", ios::binary);*/
+		: "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/t10k-images.idx3-ubyte", ios::binary);
 	magic = in(icin, 4), num = in(icin, 4), rows = in(icin, 4), cols = in(icin, 4);
 	std::vector<T> img;
 	std::vector<std::vector<T>> img2;
@@ -71,10 +71,10 @@ template <typename T> void ReadMNISTMod(std::vector<std::vector<T>> &images, std
 	}
 
 	icin.close();
-	icin.open(train ? "../../NeuNet/MNIST/train-labels.idx1-ubyte"
-		: "../../NeuNet/MNIST/t10k-labels.idx1-ubyte", ios::binary);/*
+	//icin.open(train ? "../../NeuNet/MNIST/train-labels.idx1-ubyte"
+	//	: "../../NeuNet/MNIST/t10k-labels.idx1-ubyte", ios::binary);
 	icin.open(train ? "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/train-labels.idx1-ubyte"
-		: "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/t10k-labels.idx1-ubyte", ios::binary);*/
+		: "C:/Users/Misha/source/repos/NeuNet/NeuNet/MNIST/t10k-labels.idx1-ubyte", ios::binary);
 	long int num2_ = num;
 	magic = in(icin, 4), num2_ = in(icin, 4);
 	for (long int i = 0; i < num; i++)

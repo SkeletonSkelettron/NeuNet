@@ -1,0 +1,817 @@
+{
+	"arr": [
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 784,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 2500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.65,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 2000,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 1500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 1000,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 1024,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "CrossEntropyLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "SoftPlus"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "SoftPlus"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "SoftPlus"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "SoftPlus"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "SoftPlus"
+				}
+			]
+		},
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "AdaGrad",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.001,
+			"LearningRateType": "Adam",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "RMSProp",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.6,
+					"Bias": 1,
+					"ActivationFunction": "GeLU"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 1,
+					"ActivationFunction": "GeLU"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 1,
+					"ActivationFunction": "GeLU"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "GeLU"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "GeLU"
+				}
+			]
+		},
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "CrossEntropyLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.5,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 320,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 275,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 163,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 75,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 784,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 784,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 800,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.45,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 500,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.35,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 250,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.28,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.2,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "AdaGrad",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 700,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.4,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 300,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.3,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 100,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.2,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "Normal",
+			"ThreadCount": 6,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 785,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 1,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 320,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.3,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 275,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.25,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 163,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.2,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 75,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0.15,
+					"Bias": 1,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 10,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+
+		{
+			"Type": "AutoEncoder",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 784,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 64,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 784,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		},
+		{
+			"Type": "AutoEncoder",
+			"ThreadCount": 10,
+			"LearningRate": 0.6,
+			"LearningRateType": "Static",
+			"Balance": "GaussianStandartization",
+			"LossFunction": "MeanSquaredLoss",
+			"Gradient": "Static",
+			"Layers": [
+				{
+					"Size": 784,
+					"Type": "InputLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "None"
+				},
+				{
+					"Size": 300,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 50,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 300,
+					"Type": "HiddenLayer",
+					"DropuOutSize": 0,
+					"Bias": 0,
+					"ActivationFunction": "Sigmoid"
+				},
+				{
+					"Size": 784,
+					"Type": "OutputLayer",
+					"DropuOutSize": 0,
+					"ActivationFunction": "Sigmoid"
+				}
+			]
+		}
+	]
+}

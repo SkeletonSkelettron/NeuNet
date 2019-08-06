@@ -14,13 +14,13 @@ template <typename T> static T Mean(vector<T> x)
     for (unsigned long int i = 0; i < n; i++)
         sum += x[i];
 
-    return sum / static_cast<T>(n);
+    return sum / n;
 }
 
 
 template <typename T> static void Standartize(vector<T> &dataset)
 {
-    const T Epsilon = static_cast<T>(0.000001);
+    const T Epsilon = 0.000001;
     auto mean = Mean(dataset);
     auto StDev = StandardDeviationOfPopulation(dataset);
 
@@ -36,22 +36,22 @@ template <typename T> static T StandardDeviationOfPopulation(vector<T> &x)
 
 template <typename T> static T VarianceOfPopulation(vector<T> &x)
 {
-    T mean = Mean(x), sumSq = static_cast<T>(0);
+    T mean = Mean(x), sumSq = 0;
     int n = x.size();
 
     for (unsigned long int i = 0; i < n; i++)
     {
-        double delta = x[i] - mean;
+        T delta = x[i] - mean;
 
         sumSq += delta * delta;
     }
 
-    return sumSq / static_cast<T>(n);
+    return sumSq / n;
 }
 
 template <typename T> static void Normalize(vector<T> &dataset)
 {
-    const T Epsilon = static_cast<T>(0.000001);
+    const T Epsilon = 0.000001;
     T range = Max(dataset) - Min(dataset);
     for (unsigned long int i = 0; i < dataset.size(); i++)
     {

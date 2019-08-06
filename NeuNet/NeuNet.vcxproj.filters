@@ -98,9 +98,6 @@
     <ClInclude Include="StatisticFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UtilityFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WorkerThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,6 +119,9 @@
     <ClInclude Include="GradientFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ActivationFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="MNIST\t10k-images.idx3-ubyte">
@@ -136,5 +136,10 @@
     <Resource Include="MNIST\train-labels.idx1-ubyte">
       <Filter>MNIST</Filter>
     </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="NetSampleJsons.json">
+      <Filter>Resources</Filter>
+    </Text>
   </ItemGroup>
 </Project>

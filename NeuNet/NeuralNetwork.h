@@ -4,7 +4,7 @@
 #include <thread>
 #include <condition_variable>
 #include "enums.h"
-#include "utilityfunctions.h"
+#include "ActivationFunctions.h"
 #include "WorkerThread.h"
 #include "Layer.h"
 #include "LearningRateFunctions.h"
@@ -27,13 +27,16 @@ public:
 	NeuralEnums::LossFunctionType LossFunctionType;
 	NeuralEnums::GradientType GradientType;
 	std::vector<Layer<T>> Layers;
+	long int iterations;
+	long double beta1Pow;
+	long double beta2Pow;
 	void NeuralNetworkInit();
 	void InitializeWeights();
 	T PropageteForward(std::vector<T> &targetArray, bool usingDropouts);
 	T PropageteForwardThreaded(std::vector<T> &targetArray, bool usingDropouts);
 	void PropagateBack(std::vector<T> &/*, NeuralEnums::LearningRateType, NeuralEnums::GradientType*/);
 	void PropagateBackThreaded(std::vector<T> &);
-	void PopagateBackDelegate(std::vector<T> &targetArray, long  int i, long int start, long  int end);
+	void PopagateBackDelegate(std::vector<T> &targetArray, int i, long int start, long  int end);
 	void ShuffleDropoutsPlain();
 	void ShuffleDropoutsGuram();
 };
@@ -49,6 +52,9 @@ template<class T>
 void NeuralNetwork<T>::NeuralNetworkInit()
 {
 	Layers.resize(0);
+	iterations = 0;
+	beta1Pow = 0.9;
+	beta2Pow = 0.999;
 	for (int i = 0; i < ThreadCount; i++)
 	{
 		workers.push_back(new WorkerThread());
@@ -101,7 +107,9 @@ void NeuralNetwork<T>::InitializeWeights()
 		Layers[i].Weights.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
 		Layers[i].MultipliedSums.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
 		Layers[i].Gradients.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
+		Layers[i].Parameters.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
 		Layers[i].GradientsForGrads.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
+		Layers[i].LearningRates.resize(Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)));
 		for (long int ff = 0; ff < Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)); ff++)
 		{
 			Layers[i].MultipliedSums[ff] = 0L;
@@ -109,7 +117,7 @@ void NeuralNetwork<T>::InitializeWeights()
 		}
 		for (long int j = 0; j < Layers[i - 1].Size * (Layers[i].Size - (Layers[i].UsingBias ? 1 : 0)); j++)
 		{
-			Layers[i].Weights[j] = Layers[i].UsingBias && j % Layers[i - 1].Size == 0 ? 1L : static_cast<T>(dist(gen)) / 100L;
+			Layers[i].Weights[j] = Layers[i].UsingBias && j % Layers[i - 1].Size == 0 ? 1 : dist(gen) / 100;
 		}
 		BalanceWith<T>(Layers[i].Weights, BalanceType);
 		if (Layers[i - 1].UsingBias)
@@ -133,7 +141,7 @@ T NeuralNetwork<T>::PropageteForward(std::vector<T> &targetArray, bool usingDrop
 			Layers[k].CalculateInputs(Layers[k - 1].Outputs, Layers[k - 1].DropoutNeurons, usingDropouts);
 		Layers[k].CalculateOutputs(usingDropouts);
 	}
-	return CalculateLoss<T>(NeuralEnums::LossFunctionType::MeanSquaredLoss, Layers[Layers.size() - 1].Outputs, targetArray);
+	return CalculateLoss<T>(LossFunctionType, Layers[Layers.size() - 1].Outputs, targetArray);
 }
 
 template<class T>
@@ -146,7 +154,7 @@ T NeuralNetwork<T>::PropageteForwardThreaded(std::vector<T> &targetArray, bool u
 			Layers[k].CalculateInputsThreaded(Layers[k - 1].Outputs, Layers[k - 1].DropoutNeurons, usingDropouts, ThreadCount, workers);
 		Layers[k].CalculateOutputsThreaded(ThreadCount, usingDropouts, workers);
 	}
-	return CalculateLoss<T>(NeuralEnums::LossFunctionType::MeanSquaredLoss, Layers[Layers.size() - 1].Outputs, targetArray);
+	return CalculateLoss<T>(LossFunctionType, Layers[Layers.size() - 1].Outputs, targetArray);
 }
 
 template<class T>
@@ -182,12 +190,14 @@ void NeuralNetwork<T>::PropagateBackThreaded(std::vector<T> &targetArray)
 	}
 }
 template<class T>
-void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, long  int i, long int start, long  int end)
+void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, int i, long int start, long  int end)
 {
+	long int numberIndex = 0;
 	int pLS = Layers[i - 1].Size;
 	int biasShift = Layers[i].UsingBias ? 1 : 0;
 	start = start == 0 && Layers[i].UsingBias ? 1 : start;
 	T gradient;
+	T gradientTemp;
 	for (long int j = start; j < end; j++)
 	{
 		if (Layers[i].DropoutNeurons[j])
@@ -195,30 +205,28 @@ void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, long  i
 		// Output ლეიერი
 		if (i == Layers.size() - 1)
 		{
-			Layers[i].Outputs[j] = DifferentiateLossWith(Layers[i].Outputs[j], targetArray[j], NeuralEnums::LossFunctionType::MeanSquaredLoss);
+			Layers[i].Outputs[j] = DifferentiateLossWith(Layers[i].Outputs[j], targetArray[j], LossFunctionType);
 
-			//SoftMax ის შემთხვევაში ეს არ იმუშავებს რადგან ინფუთში მნიშვნელობები იცვლება. TODO
-			Layers[i].Inputs[j] = DifferentiateWith(Layers[i].Inputs[j], Layers[i].ActivationFunction, Layers[i].Inputs);
+			Layers[i].Inputs[j] = DifferentiateWith(Layers[i].Inputs[j], Layers[i].ActivationFunction);
 
 			// Output ლეიერში წონების დაკორექტირება
 			for (long int p = 0; p < pLS; p++)
 			{
 				if (Layers[i - 1].DropoutNeurons[p])
 					continue;
-				Layers[i].MultipliedSums[pLS * j + p] = Layers[i].Weights[pLS * j + p] * Layers[i].Inputs[j] * Layers[i].Outputs[j];
-				gradient = GetGradient(GradientType, Layers[i].GradientsForGrads, Layers[i].Outputs[j] * Layers[i].Inputs[j] * Layers[i - 1].Outputs[p], pLS * j + p);
-				Layers[i].Weights[pLS * j + p] -= GetLearningRate(LearningRateType, Layers[i].Gradients, Layers[i].Outputs[j] * Layers[i].Inputs[j] * Layers[i - 1].Outputs[p]
-					, pLS * j + p, LearningRate)
-					* Layers[i].Outputs[j] * Layers[i].Inputs[j] * Layers[i - 1].Outputs[p];
+				numberIndex = pLS * j + p;
+				Layers[i].MultipliedSums[pLS * j + p] = Layers[i].Weights[numberIndex] * Layers[i].Inputs[j] * Layers[i].Outputs[j];
+				gradient = Layers[i].Outputs[j] * Layers[i].Inputs[j] * Layers[i - 1].Outputs[p];
+				gradient = GetGradient(*this, gradient, numberIndex, i);
+				Layers[i].Weights[numberIndex] -=
+					GetLearningRate(*this, gradient, i, numberIndex);
 			}
 		}
 		else
 		{
-			//SoftMax ის შემთხვევაში ეს არ იმუშავებს რადგან ინფუთში მნიშვნელობები იცვლება. TODO
-			Layers[i].Inputs[j] = DifferentiateWith(Layers[i].Inputs[j], Layers[i].ActivationFunction, Layers[i].Inputs);
+			Layers[i].Inputs[j] = DifferentiateWith(Layers[i].Inputs[j], Layers[i].ActivationFunction);
 
 			T sum = 0;
-
 			int nextLayerBiasShift = Layers[i + 1].UsingBias ? 1 : 0;
 
 			//შემდეგი ლეიერიდან უნდა აიღოს შესაბამისი ჯამები
@@ -230,9 +238,9 @@ void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, long  i
 			}
 
 			//მიმდინარე ნეირონის შესაბამისი წონების განახლება
-			int numberIndex = 0;
+
 			T mult = Layers[i].Inputs[j] * sum;
-			
+
 			if (i != 1)
 				for (long int n = 0; n < pLS; n++)
 				{
@@ -241,9 +249,9 @@ void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, long  i
 						continue;
 					numberIndex = pLS * (j - biasShift) + n;
 					Layers[i].MultipliedSums[numberIndex] = Layers[i].Weights[numberIndex] * mult;
-					gradient = GetGradient(GradientType, Layers[i].GradientsForGrads, mult * Layers[i - 1].Outputs[n], numberIndex);
-					Layers[i].Weights[numberIndex] -= GetLearningRate(LearningRateType, Layers[i].Gradients, gradient, numberIndex, LearningRate)
-						*gradient;
+					gradient = mult * Layers[i - 1].Outputs[n];
+					gradient = GetGradient(*this, gradient, numberIndex, i);
+					Layers[i].Weights[numberIndex] -= GetLearningRate(*this, gradient, i, numberIndex);
 				}
 			else
 				for (long int n = 0; n < pLS; n++)
@@ -251,9 +259,9 @@ void NeuralNetwork<T>::PopagateBackDelegate(std::vector<T> &targetArray, long  i
 					if (Layers[i - 1].DropoutNeurons[n])
 						continue;
 					numberIndex = pLS * (j - biasShift) + n;
-					gradient = GetGradient(GradientType, Layers[i].GradientsForGrads, mult * Layers[i - 1].Outputs[n], numberIndex);
-					Layers[i].Weights[numberIndex] -= GetLearningRate(LearningRateType, Layers[i].Gradients, gradient, numberIndex, LearningRate)
-						* gradient;
+					gradient = mult * Layers[i - 1].Outputs[n];
+					gradient = GetGradient(*this, gradient, numberIndex, i);
+					Layers[i].Weights[numberIndex] -= GetLearningRate(*this, gradient, i, numberIndex);
 				}
 		}
 	}
