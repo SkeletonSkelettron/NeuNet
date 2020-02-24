@@ -1,7 +1,7 @@
 #pragma once
 #include <math.h>
 
-template <typename T> T GetGradient(NeuralNetwork<T> &nn, T &gradient, long int &j, int &iterator)
+template <typename T> T GetGradient(NeuralNetwork<T> &nn, T &gradient, int &j, int &iterator)
 {
 	switch (nn.GradientType)
 	{
@@ -13,7 +13,7 @@ template <typename T> T GetGradient(NeuralNetwork<T> &nn, T &gradient, long int 
 	}
 }
 
-template <typename T> T Momentum(std::vector<T> &gradients, T &gradient, long int &j)
+template <typename T> T Momentum(std::vector<T> &gradients, T &gradient, int &j)
 {
 	const T MomentumRate = 0.9;
 	gradients[j] = MomentumRate * gradients[j] + (1 - MomentumRate) * gradient;

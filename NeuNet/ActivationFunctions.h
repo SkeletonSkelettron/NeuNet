@@ -1,4 +1,4 @@
-#ifndef ACTIVATIONFUNCTIONS_H
+﻿#ifndef ACTIVATIONFUNCTIONS_H
 #define ACTIVATIONFUNCTIONS_H
 #include <vector>
 #include <math.h>
@@ -9,7 +9,7 @@
 const long double PI2 = 6.283185307179586476L;
 const long double SQ2 = 1.414213562373095048L;
 
-template <typename T> void BalanceWith(std::vector<T> &dataset, NeuralEnums::BalanceType BalancingMethod)
+template <typename T> void BalanceWith(std::vector<T>& dataset, NeuralEnums::BalanceType BalancingMethod)
 {
 	switch (BalancingMethod)
 	{
@@ -19,178 +19,317 @@ template <typename T> void BalanceWith(std::vector<T> &dataset, NeuralEnums::Bal
 		Standartize(dataset);
 		break;
 	}
-	case NeuralEnums::BalanceType::Normalization: Normalize(dataset);
+	case NeuralEnums::BalanceType::Normalization:
+	{
+		std::vector<int> tmp;
+		tmp.resize(2);
+		Compress(dataset, tmp);
+		break;
+	}
 
 	default:
 		break;
 	}
 }
 
-template <typename T> T CalculateLoss(NeuralEnums::LossFunctionType &function, std::vector<T> &output, std::vector<T> &target)
+template <typename T> void ActivateWith(
+	std::vector<T>& inputs, 
+	std::vector<T>& outputs, 
+	std::vector<int>& indexVerctor, 
+	bool batch, 
+	std::vector<bool>& drops, 
+	int& start, 
+	int& end, 
+	bool usingdrops, 
+	NeuralEnums::ActivationFunction& function)
 {
-	switch (function)
+	if (function == NeuralEnums::ActivationFunction::Sigmoid)
 	{
-	case NeuralEnums::LossFunctionType::MeanSquaredLoss: return MSL(output, target);
-	case NeuralEnums::LossFunctionType::CrossEntropyLoss: return CEL(output, target);
+		Sigmoid(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::ReLU)
+	{
+		ReLU(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::MReLU)
+	{
+		MReLU(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::Tanh)
+	{
+		Tanh(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::GeLU)
+	{
+		GeLU(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::SoftPlus)
+	{
+		SoftPlus(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else if (function == NeuralEnums::ActivationFunction::SoftSign)
+	{
+		SoftSign(inputs, outputs, indexVerctor, batch, drops, start, end, usingdrops);
+		return;
+	}
+	else
+		throw runtime_error("ActivationFunction not assigned");
+}
 
-	default:
-		break;
+template <typename T> void GeLU(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = GeLU(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = GeLU(inputs[i]);
+		}
+	}
+}
+template <typename T> void Sigmoid(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = Sigmoid(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = Sigmoid(inputs[i]);
+		}
+	}
+}
+template <typename T> void Tanh(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = tanh(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = tanh(inputs[i]);
+		}
+	}
+}
+template <typename T> void MReLU(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = MReLU(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = MReLU(inputs[i]);
+		}
+	}
+}
+template <typename T> void ReLU(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = ReLU(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = ReLU(inputs[i]);
+		}
+	}
+}
+template <typename T> void SoftMax(std::vector<T>& inputs, std::vector<T>& inputsSoftMax, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	//TODO მაინც კაი სანახავია როგორ მუშაობს
+	for (int i : indexVerctor)
+		outputs[i] = SoftMax(inputs[i], inputsSoftMax, dropoutNeurons);
+}
+template <typename T> void SoftPlus(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = SoftPlus(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = SoftPlus(inputs[i]);
+		}
+	}
+}
+template <typename T> void SoftSign(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
+{
+	if (batch)
+	{
+		for (int i : indexVerctor)
+			outputs[i] = SoftSign(inputs[i]);
+	}
+	else
+	{
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = SoftSign(inputs[i]);
+		}
 	}
 }
 
-template <typename T> T  _CEL(T &output, T &target)
+template <typename T> void Assign(std::vector<T>& inputs, std::vector<T>& outputs, std::vector<int>& indexVerctor, bool batch, std::vector<bool>& drops, int& start, int& end, bool& usingdrops)
 {
-	return -target * log(output) - (1 - target)*log(1 - output);
-}
-template <typename T> T CEL(std::vector<T> &output, std::vector<T> &target)
-{
-	if (output.size() != target.size())
-		throw runtime_error("შემავალი მასივების სიგრძეები განსხვავდება");
-	int n = output.size();
-	T sum = 0;
-	for (int i = 0; i < output.size(); i++)
+	if (batch)
 	{
-		sum += _CEL(output[i], target[i]);
+		for (int i : indexVerctor)
+			outputs[i] = inputs[i];
 	}
-	return sum;
-}
-template <typename T> T MSL(std::vector<T> &output, std::vector<T> &target)
-{
-	if (output.size() != target.size())
-		throw runtime_error("შემავალი მასივების სიგრძეები განსხვავდება");
-	T Sum = 0;
-	T n = output.size();
-	for (unsigned long int i = 0; i < output.size(); i++)
+	else
 	{
-		Sum += MSL(target[i], output[i]) / n;
-	}
-	return Sum;
-}
-template <typename T> T MSL(T &output, T &target)
-{
-	return pow((target - output), 2) / 2;
-}
-
-template <typename T> T DifferentiateLossWith(T &output, T &target, NeuralEnums::LossFunctionType &function)
-{
-	switch (function)
-	{
-	case NeuralEnums::LossFunctionType::MeanSquaredLoss: return output - target;
-	case NeuralEnums::LossFunctionType::CrossEntropyLoss: return CELDerevative(output, target);
-
-	default:
-		break;
+		for (size_t i = start; i < end; i++)
+		{
+			if (usingdrops && drops[i])
+				continue;
+			outputs[i] = inputs[i];
+		}
 	}
 }
 
-template <typename T> T CELDerevative(T &output, T &target)
+template <typename T> T DifferentiateWith(T& x, NeuralEnums::ActivationFunction& function, std::vector<T>& inputs, std::vector<bool>& dropouts)
 {
-	return -target / output + (1 - target) / (1 - output);
+	if (function == NeuralEnums::ActivationFunction::Sigmoid)
+		return SigmoidDerivative(x);
+	else if (function == NeuralEnums::ActivationFunction::ReLU)
+		return ReLUDerivative(x);
+	else if (function == NeuralEnums::ActivationFunction::MReLU)
+		return MReLUDerivative(x);
+	else if (function == NeuralEnums::ActivationFunction::Tanh)
+		return TanhDerivative(x);
+	else if (function == NeuralEnums::ActivationFunction::GeLU)
+		return GeLUDerivative(x);
+	else if (function == NeuralEnums::ActivationFunction::SoftPlus)
+		return SoftPlusDerivative(x);
+	else
+		throw runtime_error("ActivationFunction not assigned");
 }
 
-
-template <typename T> T DifferentiateWith(T &x, NeuralEnums::ActivationFunction &function/*, std::vector<T> &layerInputs*/)
-{
-	switch (function)
-	{
-		//case NeuralEnums::ActivationFunction::SoftMax: return GetSoftMaxDerivative(x, layerInputs);
-	case NeuralEnums::ActivationFunction::Sigmoid: return SigmoidDerivative(x);
-	case NeuralEnums::ActivationFunction::ReLU: return ReLUDerivative(x);
-	case NeuralEnums::ActivationFunction::MReLU: return MReLUDerivative(x);
-	case NeuralEnums::ActivationFunction::Tanh: return TanhDerivative(x);
-	case NeuralEnums::ActivationFunction::GeLU: return GeLUDerivative(x);
-	case NeuralEnums::ActivationFunction::SoftPlus: return SoftPlusDerivative(x);
-	default:
-		break;
-	}
-}
-
-template <typename T> T SoftSign(T &x)
+template <typename T> inline T SoftSign(T& x)
 {
 	return x / (abs(x) + 1);
 }
-template <typename T> T SoftSignDerivative(T &x)
+template <typename T> inline T SoftSignDerivative(T& x)
 {
-	return  1 /pow(1 + abs(x),2);
+	return  1.0 / pow(1.0 + abs(x), 2);
 }
 
-template <typename T> T SoftPlus(T &x)
+template <typename T> T SoftPlus(T& x)
 {
-	return log(1 + exp(x));
+	return log(1.0 + exp(x));
 }
-template <typename T> T SoftPlusDerivative(T &x)
+template <typename T> inline T SoftPlusDerivative(T& x)
 {
-	return  1 / (1 + exp(-x));
+	return  1.0 / (1.0 + exp(-x));
 }
-template <typename T> T SoftMax(T x, std::vector<T> &layerInputs)
+template <typename T> inline T SoftMax(T x, std::vector<T>& layerInputs, std::vector<int>& indexVector)
 {
-	T sum = 0;
-	for (unsigned long int i = 0; i < layerInputs.size(); i++)
+	T sum = 0.0;
+	for (int i : indexVector)
 	{
 		sum += exp(layerInputs[i]);
 	}
 	return exp(x) / sum;
 }
 
-template <typename T> T SoftMaxDerivative(T x, std::vector<T> &layerInputs)
+template <typename T> inline T SoftMaxDerivative(T& x, std::vector<T>& inputs, std::vector<int>& indexVector)
 {
-	auto y = SoftMax(x, layerInputs);
+	T y = SoftMax(x, inputs, indexVector);
 	return y * (1.0 - y);
 }
 
-template <typename T> T Sigmoid(T &x)
+template <typename T> inline T Sigmoid(T& x)
 {
-	return  1 / (1 + exp(-x));
+	return  1.0 / (1.0 + exp(-x));
 }
 
-template <typename T> T SigmoidDerivative(T &x)
+template <typename T> inline T SigmoidDerivative(T& x)
 {
 	T sigm = Sigmoid(x);
-	return sigm * (1 - sigm);
+	return sigm * (1.0 - sigm);
 }
 
-template <typename T> T ReLU(T &x)
+template <typename T> inline T ReLU(T& x)
 {
-	return x <= 0 ? 0 : x;
+	return x <= 0.0 ? 0.0 : x;
 }
 
-template <typename T> T ReLUDerivative(T &x)
+template <typename T> inline T ReLUDerivative(T& x)
 {
-	return x == 0 ? 0 : 1;
+	return x == 0.0 ? 0.0 : 1.0;
 }
 
-template <typename T> T Tanh(T &x)
+template <typename T> inline T Tanh(T& x)
 {
 	return tanh(x);
 }
 
-template <typename T> T TanhDerivative(T &x)
+template <typename T> inline T TanhDerivative(T& x)
 {
-	return 1  - tanh(x) * tanh(x);
+	return 1.0 - tanh(x) * tanh(x);
 }
 
-template <typename T> T MReLU(T &x)
+template <typename T> inline T MReLU(T& x)
 {
-	return x < 0 ? -0.0005*x : x;
+	return x < 0.0 ? 0.0005 * x : x;
 }
 
-template <typename T> T MReLUDerivative(T &x)
+template <typename T> inline T MReLUDerivative(T& x)
 {
-	return x < 0 ? -0.0005 : 1;
+	return x < 0.0 ? 0.0005 : 1.0;
 }
 
-template <typename T> T GeLU(T &x)
+template <typename T> inline T GeLU(T& x)
 {
-	return 0.5 * x * (1 + erf(x / SQ2));
+	return 0.5 * x * (1.0 + erf(x / SQ2));
 }
 
-template <typename T> T GeLUDerivative(T &x)
+template <typename T> inline T GeLUDerivative(T& x)
 {
-	return 0.5 + 0.5 * erf(x / SQ2) + x / (exp(-(x * x) / 2.0L) * pow(PI2, 0.5));
+	return 0.5 + 0.5 * erf(x / SQ2) + x / (exp(-(x * x) / 2.0) * pow(PI2, 0.5));
 }
 
 
-template <typename T> int GetMaxIndex(std::vector<T> &outPut)
+template <typename T> int GetMaxIndex(std::vector<T>& outPut)
 {
 	int index = 0;
 	T val = outPut[0];
@@ -204,45 +343,15 @@ template <typename T> int GetMaxIndex(std::vector<T> &outPut)
 	}
 	return index;
 }
+//
 
-template <typename T> void NormalizeN(std::vector<T> &input)
+
+template <typename T> T exp1024(T x)
 {
-	T min = input[0];
-	T max = input[0];
-
-	for (unsigned long int i = 0; i < input.size(); i++)
-	{
-		if (input[i] > max)
-			max = input[i];
-		if (input[i] < max)
-			min = input[i];
-	}
-	T range = max - min;
-	for (unsigned long int i = 0; i < input.size(); i++)
-		input[i] = (input[i] - min) / range;
+	x = 1.0 + x / 256.0;
+	x *= x; x *= x; x *= x; x *= x;
+	x *= x; x *= x; x *= x; x *= x;
+	return x;
 }
-#endif // UTILITYFUNCTIONS_H
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif ACTIVATIONFUNCTIONS_H

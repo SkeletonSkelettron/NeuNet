@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/NeuNetCompleter">
+        <file>Resources/ModelTree.txt</file>
+    </qresource>
+</RCC>

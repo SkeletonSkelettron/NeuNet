@@ -21,7 +21,7 @@ DISTFILES += \
     NeuNet.pri
 
 RESOURCES += \
-    NeuNet.qrc
+    NeuNetCompleter.qrc
 
 FORMS += \
     NeuNet.ui

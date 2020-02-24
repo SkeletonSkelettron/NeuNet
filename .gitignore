@@ -259,3 +259,17 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/NeuNet/weights5.txt
+/NeuNet/weights4.txt
+/NeuNet/weights3.txt
+/NeuNet/weights2.txt
+/NeuNet/weights1.txt
+/NeuNet/example.txt
+/NeuNet/1.bmp
+/NeuNet/logo.bmp
+/NeuNet/MNIST/train-labels.idx1-ubyte
+/NeuNet/MNIST/train-images.idx3-ubyte
+/NeuNet/MNIST/t10k-labels.idx1-ubyte
+/NeuNet/MNIST/t10k-images.idx3-ubyte
+/NeuNet/MNIST/720000/train-labels.idx1-ubyte
+/NeuNet/MNIST/720000/train-images.idx3-ubyte

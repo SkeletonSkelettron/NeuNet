@@ -8,30 +8,72 @@ const float startingLearningRate = 0.001;
 const float beta1 = 0.9;
 const float beta2 = 0.999;
 
-template <typename T> T GetLearningRate(NeuralNetwork<T> &nn, T &gradient, int &iterator, long int &j)
+template <typename T> T GetLearningRateMultipliedByGrad(NeuralNetwork<T>& nn, T& gradient, int& iterator, int& j)
 {
-	switch (nn.LearningRateType)
-	{
-	case NeuralEnums::LearningRateType::Static: return nn.LearningRate * gradient;
-	case NeuralEnums::LearningRateType::AdaGrad: return AdaGrad(nn.Layers[iterator].Gradients, gradient, j) * gradient;
-	case NeuralEnums::LearningRateType::AdaDelta: return AdaDelta(nn.Layers[iterator].Gradients, nn.Layers[iterator].Parameters, gradient, j) * gradient;
-	case NeuralEnums::LearningRateType::Adam: return Adam(nn, gradient, j, iterator);
-	case NeuralEnums::LearningRateType::AdaMax: return AdaMax(nn, gradient, j, iterator);
-	case NeuralEnums::LearningRateType::AdamMod: return AdamMod(nn, gradient, j, iterator);
-	case NeuralEnums::LearningRateType::RMSProp: return RMSProp(nn.Layers[iterator].Gradients, gradient, j) * gradient;
-	case NeuralEnums::LearningRateType::GuraMethod: return GuraMethod(nn.Layers[iterator].Gradients, nn.Layers[iterator].LearningRates, gradient, j, nn.LearningRate) * gradient;
-	default:
-		break;
-	}
+	//if (nn.LearningRateType == NeuralEnums::LearningRateType::Static)
+	//	return nn.LearningRate * gradient;
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::AdaGrad)
+	//	return AdaGrad(nn.Layers[iterator].GradientsLR, gradient, j) * gradient;
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::AdaDelta)
+	//	return AdaDelta(nn.Layers[iterator].GradientsLR, nn.Layers[iterator].Parameters, gradient, j) * gradient;
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::Adam)
+	//	return Adam(nn, gradient, j, iterator);
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::AdaMax)
+	//	return AdaMax(nn, gradient, j, iterator);
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::AdamMod)
+	//	return AdamMod(nn, gradient, j, iterator);
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::RMSProp)
+	//	return RMSProp(nn.Layers[iterator].GradientsLR, gradient, j) * gradient;
+	//else if (nn.LearningRateType == NeuralEnums::LearningRateType::GuraMethod)
+	//	return GuraMethod(nn.Layers[iterator].GradientsLR, nn.Layers[iterator].LearningRates, gradient, j, nn.LearningRate) * gradient;
+		switch (nn.LearningRateType)
+		{
+		case NeuralEnums::LearningRateType::Static: 
+			return nn.LearningRate * gradient;
+		case NeuralEnums::LearningRateType::AdaGrad: 
+			return AdaGrad(nn.Layers[iterator].GradientsLR, gradient, j) * gradient;
+		case NeuralEnums::LearningRateType::AdaDelta: 
+			return AdaDelta(nn.Layers[iterator].GradientsLR, nn.Layers[iterator].Parameters, gradient, j) * gradient;
+			//following 3 methods does not require gradient multiplication
+		case NeuralEnums::LearningRateType::Adam: 
+			return Adam(nn, gradient, j, iterator);
+		case NeuralEnums::LearningRateType::AdaMax: 
+			return AdaMax(nn, gradient, j, iterator);
+		case NeuralEnums::LearningRateType::AdamMod: 
+			return AdamMod(nn, gradient, j, iterator);
+		case NeuralEnums::LearningRateType::RMSProp: 
+			return RMSProp(nn.Layers[iterator].GradientsLR, gradient, j) * gradient;
+		case NeuralEnums::LearningRateType::GuraMethod: 
+			return GuraMethod(nn.Layers[iterator].GradientsLR, nn.Layers[iterator].LearningRates, gradient, j, nn.LearningRate) * gradient;
+		default:
+		{
+			throw runtime_error("learning rate function not defined");
+		}
+		}
 }
-template <typename T> T AdaGrad(std::vector<T> &gradients, T &gradient, long int &j)
+
+
+template <typename T> T Adam(NeuralNetwork<T>& nn, T& gradient, int& j, int& iterator)
+{
+	T result, param;
+
+	//mt
+	nn.Layers[iterator].Parameters[j] = beta1 * nn.Layers[iterator].Parameters[j] + (1 - beta1) * gradient;
+	//vt
+	nn.Layers[iterator].GradientsLR[j] = beta2 * nn.Layers[iterator].GradientsLR[j] + (1 - beta2) * gradient * gradient;
+
+
+	return (nn.LearningRate * nn.Layers[iterator].Parameters[j]) / ((1 - nn.beta1Pow) * (sqrt(nn.Layers[iterator].GradientsLR[j] / (1 - nn.beta2Pow)) + epsilon));
+}
+
+template <typename T> T AdaGrad(std::vector<T>& gradients, T& gradient, int& j)
 {
 	gradients[j] += gradient * gradient;
 	return 0.01 / sqrt(gradients[j] + epsilon);
 }
 
 
-template <typename T> T AdaDelta(std::vector<T> &gradients, std::vector<T> &parameters, T &Gradient, long int &j)
+template <typename T> T AdaDelta(std::vector<T>& gradients, std::vector<T>& parameters, T& Gradient, int& j)
 {
 	T result, param;
 	gradients[j] = momentum * gradients[j] + (1 - momentum) * Gradient * Gradient;
@@ -41,50 +83,38 @@ template <typename T> T AdaDelta(std::vector<T> &gradients, std::vector<T> &para
 	return result;
 }
 
-template <typename T> T AdamMod(NeuralNetwork<T> &nn, T &Gradient, long int &j, int &iterator)
+template <typename T> T AdamMod(NeuralNetwork<T>& nn, T& Gradient, int& j, int& iterator)
 {
 	T result, param;
 	T prelim = (1 - momentum) * Gradient;
 
-	nn.Layers[iterator].Gradients[j] = momentum * nn.Layers[iterator].Gradients[j] + prelim * Gradient;
+	nn.Layers[iterator].GradientsLR[j] = momentum * nn.Layers[iterator].GradientsLR[j] + prelim * Gradient;
 	nn.Layers[iterator].Parameters[j] = momentum * nn.Layers[iterator].Parameters[j] + prelim;
 
-	return (nn.LearningRate * nn.Layers[iterator].Parameters[j] / (1 - beta1)) / (sqrt(nn.Layers[iterator].Gradients[j] / (1 - beta2)) + epsilon);
+	return (nn.LearningRate * nn.Layers[iterator].Parameters[j] / (1 - beta1)) / (sqrt(nn.Layers[iterator].GradientsLR[j] / (1 - beta2)) + epsilon);
 }
 
-template <typename T> T Adam(NeuralNetwork<T> &nn, T &gradient, long int &j, int &iterator)
+
+template <typename T> T AdaMax(NeuralNetwork<T>& nn, T& gradient, int& j, int& iterator)
 {
 	T result, param;
 
 	//mt
 	nn.Layers[iterator].Parameters[j] = beta1 * nn.Layers[iterator].Parameters[j] + (1 - beta1) * gradient;
 	//vt
-	nn.Layers[iterator].Gradients[j] = beta2 * nn.Layers[iterator].Gradients[j] + (1 - beta2) * gradient* gradient;
+	nn.Layers[iterator].GradientsLR[j] = max(beta2 * nn.Layers[iterator].GradientsLR[j], abs(gradient));
 
 
-	return (nn.LearningRate * nn.Layers[iterator].Parameters[j]) / ((1 - nn.beta1Pow) * (sqrt(nn.Layers[iterator].Gradients[j] / (1 - nn.beta2Pow)) + epsilon));
+	return (nn.LearningRate * nn.Layers[iterator].Parameters[j]) / ((1 - nn.beta1Pow) * nn.Layers[iterator].GradientsLR[j]);
 }
 
-template <typename T> T AdaMax(NeuralNetwork<T> &nn, T &gradient, long int &j, int &iterator)
-{
-	T result, param;
-
-	//mt
-	nn.Layers[iterator].Parameters[j] = beta1 * nn.Layers[iterator].Parameters[j] + (1 - beta1) * gradient;
-	//vt
-	nn.Layers[iterator].Gradients[j] = max(beta2 * nn.Layers[iterator].Gradients[j],abs(gradient));
-
-
-	return (nn.LearningRate * nn.Layers[iterator].Parameters[j]) / ((1 - nn.beta1Pow) * nn.Layers[iterator].Gradients[j]);
-}
-
-template <typename T> T RMSProp(std::vector<T> &gradients, T &gradient, long int &j)
+template <typename T> T RMSProp(std::vector<T>& gradients, T& gradient, int& j)
 {
 	gradients[j] = momentum * gradients[j] + (1 - momentum) * gradient * gradient;
 	return startingLearningRate / sqrt(gradients[j] + epsilon);
 }
 
-template <typename T> T GuraMethod(std::vector<T> &gradients, std::vector<T> &lrTensor, T &gradient, long int &j, T &learningrate)
+template <typename T> T GuraMethod(std::vector<T>& gradients, std::vector<T>& lrTensor, T& gradient, int& j, T& learningrate)
 {
 	const T beta = 0.7;
 

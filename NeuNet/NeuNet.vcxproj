@@ -13,16 +13,16 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B12702AD-ABFB-343A-A199-8E24837244A3}</ProjectGuid>
     <Keyword>Qt4VSv1.0</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">
@@ -64,6 +64,8 @@
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <SupportJustMyCode>true</SupportJustMyCode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -99,8 +101,15 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
       <OpenMPSupport>true</OpenMPSupport>
-      <AdditionalOptions>/fp:precise</AdditionalOptions>
+      <AdditionalOptions>
+      </AdditionalOptions>
       <SupportJustMyCode>true</SupportJustMyCode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="highlighter.cpp" />
     <ClCompile Include="Hilbert.cpp" />
+    <ClCompile Include="LossFunctions.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NeuNet.cpp" />
     <ClCompile Include="textedit.cpp" />
@@ -140,9 +150,8 @@
     <QtUic Include="NeuNet.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="NeuNet.qrc" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="AvxMath.h" />
+    <ClInclude Include="avx_mathfun.h" />
     <ClInclude Include="Enums.h" />
     <QtMoc Include="highlighter.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
@@ -153,6 +162,7 @@
     <ClInclude Include="Layer.h" />
     <ClInclude Include="LearningRateFunctions.h" />
     <ClInclude Include="Loss.h" />
+    <ClInclude Include="MatrixMath.h" />
     <ClInclude Include="MnistData.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <QtMoc Include="NeuralQtThread.h">
@@ -200,6 +210,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="NetSampleJsons.json" />
+    <Text Include="Resources\ModelTree.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="NeuNetCompleter.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

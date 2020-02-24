@@ -31,8 +31,20 @@ namespace NeuralEnums {
     };
     enum class LossFunctionType
     {
-        MeanSquaredLoss,
-        CrossEntropyLoss,
+        MeanSquaredError,
+		MeanAbsoluteError,
+		MeanAbsolutePercentageError,
+		MeanSquaredLogarithmicError,
+		SquaredHinge,
+		Hinge,
+		CategoricalHinge,
+		LogCosh,
+		CategoricalCrossentropy,
+		SparseCategoricalCrossEntropy,
+		BinaryCrossentropy,
+		KullbackLeiblerDivergence,
+		Poisson,
+		CosineProximity
     };
 
     enum class LearningRateType
@@ -69,6 +81,34 @@ namespace NeuralEnums {
 		LongDouble,
 		BoostBinFloat50,
 		BoostBinFloat100
+	};
+
+	enum class Metrics
+	{
+		None,
+		TestSet,
+		Full
+	};
+
+	enum class LossCalculation
+	{
+		None,
+		Full
+	};
+
+	enum class AutoEncoderType {
+		UnderComplete,
+		Sparce,
+		Denoising,
+		Contractive,
+		Variational
+	};
+
+	enum class LogLoss
+	{
+		None,
+		Sparce,
+		Full
 	};
 }
 #endif // ENUMS_H
